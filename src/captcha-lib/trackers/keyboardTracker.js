@@ -4,12 +4,12 @@
  */
 
 // Store collected keyboard data
-export const keyTimings = [];
+let keyTimings = [];
 
 // Track key states
 const keyStates = {};
 let isTracking = false;
-let lastKeyTime = Date.now();
+let lastKeyTime = 0;
 
 /**
  * Start tracking keyboard events
@@ -18,6 +18,7 @@ export const startKeyboardTracking = () => {
   if (isTracking) return;
   
   isTracking = true;
+  lastKeyTime = Date.now();
   
   // Add event listeners
   document.addEventListener('keydown', handleKeyDown);
@@ -43,21 +44,15 @@ export const stopKeyboardTracking = () => {
  * Handler for keydown events
  */
 const handleKeyDown = (event) => {
-  const { key } = event;
   const currentTime = Date.now();
+  const key = event.key;
   
-  // Skip modifier keys when alone
-  if (['Control', 'Shift', 'Alt', 'Meta'].includes(key)) {
-    return;
-  }
+  if (keyStates[key]) return;
   
-  // Record the key press with timing data
-  keyTimings.push({
-    key: key,
-    dwellTime: 0, // Will be updated on keyup
-    flightTime: currentTime - lastKeyTime,
-    timestamp: currentTime
-  });
+  keyStates[key] = {
+    downTime: currentTime,
+    flightTime: currentTime - lastKeyTime
+  };
   
   lastKeyTime = currentTime;
 };
@@ -66,19 +61,21 @@ const handleKeyDown = (event) => {
  * Handler for keyup events
  */
 const handleKeyUp = (event) => {
-  const { key } = event;
   const currentTime = Date.now();
+  const key = event.key;
   
-  // Skip modifier keys when alone
-  if (['Control', 'Shift', 'Alt', 'Meta'].includes(key)) {
-    return;
-  }
+  if (!keyStates[key]) return;
   
-  // Find the last keydown event for this key
-  const lastKeyEvent = keyTimings.findLast(event => event.key === key);
-  if (lastKeyEvent) {
-    lastKeyEvent.dwellTime = currentTime - lastKeyEvent.timestamp;
-  }
+  const dwellTime = currentTime - keyStates[key].downTime;
+  
+  keyTimings.push({
+    key: key,
+    dwellTime: dwellTime,
+    flightTime: keyStates[key].flightTime,
+    timestamp: keyStates[key].downTime
+  });
+  
+  delete keyStates[key];
 };
 
 /**
@@ -112,3 +109,5 @@ const anonymizeKey = (key) => {
   // Special keys can be recorded as-is
   return key;
 };
+
+export { keyTimings };

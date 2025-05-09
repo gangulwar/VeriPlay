@@ -4,7 +4,7 @@
  */
 
 // Store collected scroll data
-export const scrollData = [];
+let scrollData = [];
 
 // Configuration
 const sampleRate = 100; // ms between samples
@@ -20,14 +20,9 @@ export const startScrollTracking = () => {
   
   isTracking = true;
   lastSampleTime = Date.now();
-  
-  // Get initial scroll position
   lastScrollPosition = window.scrollY || document.documentElement.scrollTop;
   
-  // Add scroll event listener
   window.addEventListener('scroll', handleScroll);
-  
-  console.log('Scroll tracking started');
 };
 
 /**
@@ -38,8 +33,6 @@ export const stopScrollTracking = () => {
   
   window.removeEventListener('scroll', handleScroll);
   isTracking = false;
-  
-  console.log('Scroll tracking stopped');
 };
 
 /**
@@ -47,22 +40,13 @@ export const stopScrollTracking = () => {
  */
 const handleScroll = () => {
   const currentTime = Date.now();
-  
-  // Only sample at specified rate to avoid excessive data
-  if (currentTime - lastSampleTime < sampleRate) {
-    return;
-  }
-  
-  // Get current scroll position
   const currentScrollPosition = window.scrollY || document.documentElement.scrollTop;
   
-  // Calculate scroll speed and direction
   const deltaY = currentScrollPosition - lastScrollPosition;
   const deltaTime = currentTime - lastSampleTime;
-  const scrollSpeed = Math.abs(deltaY / deltaTime); // Pixels per millisecond
+  const scrollSpeed = Math.abs(deltaY / deltaTime);
   const direction = deltaY > 0 ? 'down' : deltaY < 0 ? 'up' : 'none';
   
-  // Calculate scroll depth as percentage
   const scrollHeight = Math.max(
     document.body.scrollHeight,
     document.documentElement.scrollHeight,
@@ -72,20 +56,20 @@ const handleScroll = () => {
   
   const viewportHeight = window.innerHeight;
   const maxScrollPosition = scrollHeight - viewportHeight;
-  const scrollDepth = maxScrollPosition > 0 
+  const depth = maxScrollPosition > 0 
     ? currentScrollPosition / maxScrollPosition
     : 0;
   
-  // Store the scroll data in the exact format requested
   scrollData.push({
     scrollTop: currentScrollPosition,
     speed: scrollSpeed,
     direction: direction,
-    depth: scrollDepth,
+    depth: depth,
     time: currentTime
   });
   
-  // Update last values
   lastScrollPosition = currentScrollPosition;
   lastSampleTime = currentTime;
 };
+
+export { scrollData };

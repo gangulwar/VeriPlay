@@ -4,7 +4,7 @@
  */
 
 // Store collected mouse data
-export const mouseData = [];
+let mouseData = [];
 
 // Configuration
 const sampleRate = 50; // ms between samples (lower = more data)
@@ -45,18 +45,18 @@ const handleMouseMove = (event) => {
   const currentTime = Date.now();
   
   // Only sample at the specified rate to avoid excessive data
-  if (currentTime - lastSampleTime < sampleRate) {
-    return;
+  if (currentTime - lastSampleTime >= sampleRate) {
+    const { clientX, clientY } = event;
+    
+    // Store the data in the exact format requested
+    mouseData.push({
+      x: clientX,
+      y: clientY,
+      time: currentTime
+    });
+    
+    lastSampleTime = currentTime;
   }
-  
-  const { clientX, clientY } = event;
-  
-  // Store the data in the exact format requested
-  mouseData.push({
-    x: clientX,
-    y: clientY,
-    time: currentTime
-  });
-  
-  lastSampleTime = currentTime;
 };
+
+export { mouseData };

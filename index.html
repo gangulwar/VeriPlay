@@ -15,6 +15,19 @@
         <p>This content is only visible after passing the human verification.</p>
     </div>
 
-    <script type="module" src="src/captcha-lib/captcha.js"></script>
+    <script type="module">
+      window.addEventListener('error', (event) => {
+        console.error('Script error:', event.error);
+        document.getElementById('real-root').style.display = 'block';
+      });
+
+      try {
+        const module = await import('./src/captcha-lib/captcha.js');
+        console.log('CAPTCHA module loaded successfully');
+      } catch (error) {
+        console.error('Failed to load CAPTCHA:', error);
+        document.getElementById('real-root').style.display = 'block';
+      }
+    </script>
   </body>
 </html>
