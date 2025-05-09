@@ -3,6 +3,10 @@ import { startMouseTracking } from './trackers/mouseTracker.js';
 import { startKeyboardTracking } from './trackers/keyboardTracker.js';
 import { startScrollTracking } from './trackers/scrollTracker.js';
 import { send, setCaptchaPassed } from './apiSimulator.js';
+import { startGame as startMouseGame } from './games/mouseGame.js';
+import { startGame as startTypingGame } from './games/typingGame.js';
+import { startGame as startScrollGame } from './games/scrollGame.js';
+import { startGame as startDragDropGame } from './games/dragDropGame.js';
 
 const initializeVeriPlay = () => {
   console.log('Initializing VeriPlay...');
@@ -58,7 +62,16 @@ const initializeVeriPlay = () => {
   }
   
   console.log('Initializing CAPTCHA game...');
-  initCaptcha((success) => {
+  const games = [
+    startMouseGame,
+    startTypingGame,
+    startScrollGame,
+    startDragDropGame
+  ];
+  
+  const randomGame = games[Math.floor(Math.random() * games.length)];
+  
+  randomGame((success) => {
     if (success) {
       console.log('CAPTCHA passed, starting verification...');
       setCaptchaPassed();
