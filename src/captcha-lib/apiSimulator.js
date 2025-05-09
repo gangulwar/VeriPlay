@@ -10,6 +10,46 @@ import { scrollData } from './trackers/scrollTracker.js';
 let captchaPassed = false;
 let isVerifying = false;
 
+const encryptData = (data) => {
+  const jsonString = JSON.stringify(data);
+  const encoded = btoa(jsonString);
+  return encoded;
+};
+
+const decryptData = (encrypted) => {
+  try {
+    const decoded = atob(encrypted);
+    return JSON.parse(decoded);
+  } catch (error) {
+    console.error('Error decrypting data:', error);
+    return null;
+  }
+};
+
+const storeBehavioralData = (data) => {
+  try {
+    const encrypted = encryptData(data);
+    const timestamp = Date.now();
+    const key = `vp_behavior_${timestamp}`;
+    
+    localStorage.setItem(key, encrypted);
+    
+    // Keep only last 10 entries
+    const keys = Object.keys(localStorage)
+      .filter(k => k.startsWith('vp_behavior_'))
+      .sort()
+      .reverse();
+    
+    if (keys.length > 10) {
+      keys.slice(10).forEach(k => localStorage.removeItem(k));
+    }
+    
+    console.log('Behavioral data stored with key:', key);
+  } catch (error) {
+    console.error('Error storing behavioral data:', error);
+  }
+};
+
 // Set CAPTCHA status to passed
 export const setCaptchaPassed = () => {
   if (isVerifying) return;
@@ -98,6 +138,9 @@ export const send = async () => {
   await new Promise(resolve => setTimeout(resolve, Math.random() * 500 + 300));
 
   console.log('Raw Behavioral Data:', JSON.stringify(payload, null, 2));
+  
+  // Store the data in localStorage
+  storeBehavioralData(payload);
 
   return payload;
 };
@@ -132,6 +175,9 @@ export const verifyCaptcha = async (data) => {
   
   console.log('Verification Data:', JSON.stringify(formattedData, null, 2));
   
+  // Store the verification data
+  storeBehavioralData(formattedData);
+
   return true;
 };
 
@@ -153,4 +199,19 @@ export const getSessionId = () => {
 
 export const resetSession = () => {
   localStorage.removeItem('veriplay_session_id');
+};
+
+export const getStoredBehavioralData = () => {
+  const keys = Object.keys(localStorage)
+    .filter(k => k.startsWith('vp_behavior_'))
+    .sort()
+    .reverse();
+  
+  return keys.map(key => {
+    const encrypted = localStorage.getItem(key);
+    return {
+      timestamp: parseInt(key.split('_')[2]),
+      data: decryptData(encrypted)
+    };
+  });
 };
