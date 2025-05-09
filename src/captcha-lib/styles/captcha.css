@@ -1,0 +1,244 @@
+
+/* HumanPlay CAPTCHA System Styles */
+
+/* Overlay that covers the entire page */
+.captcha-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: opacity 0.5s ease;
+}
+
+.captcha-overlay.fade-out {
+  opacity: 0;
+}
+
+/* Main content container */
+.captcha-content {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 500px;
+  overflow: hidden;
+  animation: scale-in 0.3s ease-out;
+}
+
+/* Header section */
+.captcha-header {
+  padding: 20px;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: center;
+  background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+  color: white;
+}
+
+.captcha-header h2 {
+  margin: 0 0 8px 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.captcha-header p {
+  margin: 0;
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+/* Game container */
+.captcha-game-container {
+  padding: 24px;
+  min-height: 200px;
+}
+
+/* Success message */
+.success-message {
+  text-align: center;
+  padding: 20px;
+  animation: fade-in 0.5s ease-out;
+}
+
+.success-message h3 {
+  color: #10B981;
+  margin-bottom: 10px;
+}
+
+/* Mouse Game Styles */
+.mouse-game-area {
+  width: 100%;
+  height: 200px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  margin: 15px 0;
+  background-color: #f9fafb;
+}
+
+.mouse-game-target {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #3B82F6 0%, #1D4ED8 100%);
+  position: absolute;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mouse-game-target::after {
+  content: '';
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 50%;
+}
+
+.mouse-game-target.clicked {
+  transform: scale(0.9);
+  background: radial-gradient(circle, #10B981 0%, #047857 100%);
+}
+
+.mouse-game-counter {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 10px;
+  font-size: 1.1rem;
+}
+
+/* Typing Game Styles */
+.typing-game-text {
+  background-color: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  padding: 15px;
+  margin: 15px 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.typing-game-input-container {
+  margin: 15px 0;
+}
+
+.typing-game-input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.typing-game-input:focus {
+  border-color: #3B82F6;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+.typing-game-feedback {
+  height: 24px;
+  margin-top: 10px;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+/* Scroll Game Styles */
+.scroll-game-area {
+  height: 200px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow-y: scroll;
+  position: relative;
+  margin: 15px 0;
+  background-color: #f9fafb;
+}
+
+.scroll-game-content {
+  position: relative;
+  width: 100%;
+}
+
+.scroll-marker {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.top-marker {
+  background-color: rgba(59, 130, 246, 0.2);
+  border-bottom: 2px solid #3B82F6;
+}
+
+.bottom-marker {
+  background-color: rgba(29, 78, 216, 0.2);
+  border-top: 2px solid #1D4ED8;
+}
+
+.bottom-marker.reached {
+  background-color: rgba(16, 185, 129, 0.2);
+  border-top: 2px solid #10B981;
+  color: #10B981;
+}
+
+.scroll-progress-indicator {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.scroll-progress-indicator span {
+  background: linear-gradient(90deg, #3B82F6 0%, #1D4ED8 100%);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+/* Animations */
+@keyframes fade-in {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scale-in {
+  0% { opacity: 0; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .captcha-content {
+    width: 95%;
+    max-width: none;
+  }
+  
+  .mouse-game-area {
+    height: 150px;
+  }
+  
+  .mouse-game-target {
+    width: 50px;
+    height: 50px;
+  }
+}

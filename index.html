@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VeriPlay CAPTCHA Demo</title>
+    <link rel="stylesheet" href="src/captcha-lib/styles/captcha.css">
+  </head>
+
+  <body>
+    <div id="captcha-root"></div>
+    <div id="real-root" style="display:none">
+        <!-- Your main website content will go here -->
+        <h1>Welcome to the Protected Content</h1>
+        <p>This content is only visible after passing the human verification.</p>
+    </div>
+
+    <script type="module" src="src/captcha-lib/captcha.js"></script>
+  </body>
+</html>
