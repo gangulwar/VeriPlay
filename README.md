@@ -1,160 +1,251 @@
-# HumanPlay CAPTCHA Integration Guide
+# VeriPlay CAPTCHA System
 
-## Overview
-
-HumanPlay CAPTCHA is an advanced human verification system that uses behavioral biometrics to distinguish humans from bots. It tracks mouse movements, keystroke dynamics, and scroll patterns to create a unique behavioral profile.
+A modern, user-friendly CAPTCHA system that uses behavioral analysis and interactive games to verify human users. The system is designed to be both secure and user-friendly, with multiple verification methods and real-time behavioral tracking.
 
 ## Features
 
-- 🖱️ Mouse movement tracking
-- ⌨️ Keystroke dynamics analysis
-- 📜 Scroll behavior monitoring
-- 🔒 Data encryption and secure storage
-- ⏱️ Realistic verification delay
-- ⛔ Copy-paste prevention
+- **Multiple Verification Games**:
+  - Mouse Click Game: Click moving targets
+  - Typing Game: Type sentences with accuracy
+  - Scroll Game: Scroll to bottom and back
+  - Drag & Drop Game: Match shapes by color
+
+- **Behavioral Analysis**:
+  - Mouse movement tracking
+  - Keyboard pattern analysis
+  - Scroll behavior monitoring
+  - Drag & drop interaction analysis
+
+- **Security Features**:
+  - Encrypted data storage
+  - Session management
+  - Attempt limiting
+  - Real-time verification
 
 ## Quick Start
 
-1. Include the required files in your project:
-   ```html
-   <link rel="stylesheet" href="captcha.css">
-   <script src="captcha.js"></script>
-   ```
+1. **Include Required Files**:
+```html
+<!-- Add to your HTML head -->
+<link rel="stylesheet" href="path/to/captcha-lib/styles/captcha.css">
 
-2. Add the CAPTCHA overlay structure to your HTML:
-   ```html
-   <div id="captcha-overlay">
-       <div class="captcha-container">
-           <h2>Human Verification</h2>
-           <p class="challenge-text">Please type the following sentence to verify you are human:</p>
-           <p id="challenge-text" class="challenge-text">Your custom challenge text here</p>
-           <input type="text" id="user-input" class="input-field" placeholder="Type the sentence here...">
-           <button id="submit-btn" class="submit-btn">Verify</button>
-           <div id="error-message" class="error-message"></div>
-           <div id="loading" class="loading">
-               <div class="spinner"></div>
-               <p>Verifying...</p>
-           </div>
-       </div>
-   </div>
+<!-- Add before closing body tag -->
+<div id="captcha-root"></div>
+<div id="real-root">
+  <!-- Your actual content goes here -->
+</div>
+<script type="module" src="path/to/captcha-lib/captcha.js"></script>
+```
 
-   <div id="real-root" style="display:none">
-       <!-- Your main website content -->
-   </div>
-   ```
+2. **Initialize the System**:
+```javascript
+// The system will automatically initialize when the page loads
+// To manually reset the CAPTCHA:
+import { resetCaptcha } from 'path/to/captcha-lib/captcha.js';
+resetCaptcha();
+```
+
+## Integration Methods
+
+### 1. Basic Integration
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Page</title>
+    <link rel="stylesheet" href="path/to/captcha-lib/styles/captcha.css">
+</head>
+<body>
+    <!-- CAPTCHA container -->
+    <div id="captcha-root"></div>
+    
+    <!-- Your content container -->
+    <div id="real-root">
+        <h1>Your Protected Content</h1>
+        <!-- Your content here -->
+    </div>
+
+    <script type="module" src="path/to/captcha-lib/captcha.js"></script>
+</body>
+</html>
+```
+
+### 2. Framework Integration
+
+#### React
+```jsx
+import { useEffect } from 'react';
+import 'path/to/captcha-lib/styles/captcha.css';
+
+function App() {
+  useEffect(() => {
+    // Import and initialize CAPTCHA
+    import('path/to/captcha-lib/captcha.js');
+  }, []);
+
+  return (
+    <div>
+      <div id="captcha-root"></div>
+      <div id="real-root">
+        <h1>Your Protected Content</h1>
+      </div>
+    </div>
+  );
+}
+```
+
+#### Vue
+```vue
+<template>
+  <div>
+    <div id="captcha-root"></div>
+    <div id="real-root">
+      <h1>Your Protected Content</h1>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  mounted() {
+    import('path/to/captcha-lib/captcha.js');
+  }
+}
+</script>
+```
+
+### 3. Custom Configuration
+
+```javascript
+// Create a config file (e.g., captcha-config.js)
+export const captchaConfig = {
+  // Game settings
+  games: {
+    mouseGame: {
+      requiredClicks: 5,
+      targetSpeed: 'medium'
+    },
+    typingGame: {
+      maxErrorRate: 5,
+      minCompletion: 0.9
+    },
+    scrollGame: {
+      requiredDepth: 0.95,
+      returnThreshold: 0.05
+    },
+    dragDropGame: {
+      maxAttempts: 3,
+      shapes: ['circle', 'square', 'triangle']
+    }
+  },
+  
+  // Tracking settings
+  tracking: {
+    mouseTracking: true,
+    keyboardTracking: true,
+    scrollTracking: true,
+    dataSendInterval: 5000
+  },
+  
+  // UI settings
+  ui: {
+    theme: 'light',
+    language: 'en',
+    customStyles: {
+      // Your custom CSS variables
+    }
+  }
+};
+
+// Import and use in your main file
+import { captchaConfig } from './captcha-config.js';
+```
 
 ## Data Collection
 
 The system collects the following behavioral data:
 
-### Mouse Movements
-- X and Y coordinates
-- Timestamp of each movement
-
-### Keystroke Dynamics
-- Dwell time (how long a key is held)
-- Flight time (time between key presses)
-- Key sequence and timing
-
-### Scroll Behavior
-- Scroll speed
-- Direction changes
-- Scroll depth
-- Acceleration patterns
-
-## Data Storage
-
-Data is stored in two ways:
-
-1. **IndexedDB Storage**
-   - Encrypted behavioral data
-   - Timestamp of collection
-   - Session-specific storage
-
-2. **Console Logging**
-   - Raw data for debugging
-   - Real-time monitoring
-   - Development assistance
-
-## Security Features
-
-1. **Copy-Paste Prevention**
-   - Disabled paste events on input fields
-   - Manual typing required
-   - Prevents automated form filling
-
-2. **Data Encryption**
-   - Base64 encoding (for demonstration)
-   - Ready for production encryption
-   - Secure storage implementation
-
-3. **Verification Delay**
-   - Simulated backend processing
-   - Realistic user experience
-   - Configurable delay time
-
-## Customization
-
-### Challenge Text
-```html
-<p id="challenge-text" class="challenge-text">Your custom challenge text here</p>
-```
-
-### Verification Delay
 ```javascript
-// In captcha.js
-await new Promise(resolve => setTimeout(resolve, 2000)); // 2 seconds delay
-```
-
-### Styling
-The CAPTCHA interface can be customized using CSS:
-```css
-.captcha-container {
-    /* Your custom styles */
+{
+  mouseMovements: [
+    {
+      x: number,
+      y: number,
+      time: timestamp
+    }
+  ],
+  keyTimings: [
+    {
+      key: string,
+      dwellTime: number,
+      flightTime: number,
+      timestamp: number
+    }
+  ],
+  scrollData: [
+    {
+      scrollTop: number,
+      speed: number,
+      direction: string,
+      depth: number,
+      time: number
+    }
+  ]
 }
 ```
 
-## Development
+## Security Considerations
 
-### Debugging
-1. Open browser console to view raw data
-2. Use `atob()` to decode stored data
-3. Monitor IndexedDB storage
+1. **Data Storage**:
+   - All behavioral data is encrypted before storage
+   - Data is stored locally with session management
+   - Automatic cleanup of old data
 
-### Testing
-1. Verify mouse tracking
-2. Test keyboard input
-3. Check scroll behavior
-4. Validate data storage
+2. **Verification Process**:
+   - Multiple verification methods
+   - Real-time behavioral analysis
+   - Attempt limiting
+   - Session-based verification
 
-## Production Considerations
+3. **Best Practices**:
+   - Always use HTTPS
+   - Implement rate limiting
+   - Monitor for suspicious patterns
+   - Regular updates and maintenance
 
-1. **Security**
-   - Implement proper encryption
-   - Add rate limiting
-   - Set up proper backend validation
+## Customization
 
-2. **Performance**
-   - Optimize data collection
-   - Implement data batching
-   - Add cleanup routines
+### Styling
+```css
+/* Override default styles */
+:root {
+  --captcha-primary-color: #your-color;
+  --captcha-secondary-color: #your-color;
+  --captcha-background: #your-color;
+  --captcha-text-color: #your-color;
+}
+```
 
-3. **User Experience**
-   - Add error handling
-   - Implement retry mechanisms
-   - Provide clear feedback
+### Game Selection
+```javascript
+// Modify game selection in captcha.js
+const games = [
+  startMouseGame,
+  startTypingGame,
+  startScrollGame,
+  startDragDropGame
+  // Add or remove games as needed
+];
+```
 
-## Browser Support
+## Support
 
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
+For issues, feature requests, or contributions:
+1. Open an issue on GitHub
+2. Submit a pull request
+3. Contact the development team
 
 ## License
 
 MIT License - See LICENSE file for details
-
-## Support
-
-For support, please open an issue in the repository or contact the development team.
