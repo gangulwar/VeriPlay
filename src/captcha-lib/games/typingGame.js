@@ -42,6 +42,16 @@ export const startGame = (onComplete) => {
   input.className = 'typing-game-input';
   input.placeholder = 'Type here...';
   
+  // Prevent paste functionality
+  input.addEventListener('paste', (e) => {
+    e.preventDefault();
+  });
+  
+  // Prevent context menu (right-click paste)
+  input.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+  });
+  
   const feedbackElement = document.createElement('div');
   feedbackElement.className = 'typing-game-feedback';
   
