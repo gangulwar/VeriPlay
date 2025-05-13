@@ -7,6 +7,7 @@ import { startGame as startMouseGame } from './games/mouseGame.js';
 import { startGame as startTypingGame } from './games/typingGame.js';
 import { startGame as startScrollGame } from './games/scrollGame.js';
 import { startGame as startDragDropGame } from './games/dragDropGame.js';
+import { startGame as startPatternGame } from './games/patternLockGame.js';
 
 const initializeVeriPlay = () => {
   console.log('Initializing VeriPlay...');
@@ -66,7 +67,8 @@ const initializeVeriPlay = () => {
     startMouseGame,
     startTypingGame,
     startScrollGame,
-    startDragDropGame
+    startDragDropGame,
+    startPatternGame
   ];
   
   const randomGame = games[Math.floor(Math.random() * games.length)];
