@@ -1,16 +1,17 @@
-
 /**
  * Game Manager responsible for selecting and initializing random games
  */
 import { startGame as startMouseGame } from './games/mouseGame.js';
 import { startGame as startTypingGame } from './games/typingGame.js';
 import { startGame as startScrollGame } from './games/scrollGame.js';
+import { startGame as startPatternGame } from './games/patternLockGame.js';
 
 // List of available games
 const gameList = [
   { name: 'mouse', start: startMouseGame },
   { name: 'typing', start: startTypingGame },
-  { name: 'scroll', start: startScrollGame }
+  { name: 'scroll', start: startScrollGame },
+  { name: 'pattern', start: startPatternGame }
 ];
 
 /**
