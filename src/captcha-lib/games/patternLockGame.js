@@ -1,12 +1,9 @@
-/**
- * Pattern Lock Game
- * Players must connect dots in a specific pattern using mouse movements
- */
+
 import { mouseData, startMouseTracking, stopMouseTracking } from '../trackers/mouseTracker.js';
 
-// Predefined patterns - each array represents dot indices to connect
+
 const PATTERNS = [
-  // Letter patterns
+
   [0, 3, 6, 7, 8], // L shape
   [0, 1, 2, 5, 8, 7, 6], // U shape
   [0, 4, 8, 5, 2], // X shape
@@ -18,7 +15,7 @@ const PATTERNS = [
   [0, 4, 8, 5, 2, 1], // House shape
 ];
 
-// Constants
+
 const GRID_SIZE = 3;
 const DOT_SIZE = 20;
 const SPACING = 80;
@@ -27,7 +24,7 @@ const GAME_AREA_SIZE = 300;
 const PREVIEW_SIZE = 120;
 const SUCCESS_DELAY = 500;
 
-// Cache DOM queries and calculations
+
 const createDomElement = (tag, className, styles = {}) => {
   const element = document.createElement(tag);
   if (className) element.className = className;
@@ -35,7 +32,7 @@ const createDomElement = (tag, className, styles = {}) => {
   return element;
 };
 
-// Memoized distance calculation
+
 const distanceCache = new Map();
 const calculateDistance = (x1, y1, x2, y2) => {
   const key = `${x1},${y1},${x2},${y2}`;
@@ -55,7 +52,6 @@ export const startGame = (onComplete) => {
   startMouseTracking();
   gameContainer.innerHTML = '';
 
-  // Create game elements using optimized DOM creation
   const gameElements = {
     title: createDomElement('h3', 'pattern-title', { textContent: 'Pattern Verification' }),
     instructions: createDomElement('p', 'pattern-instructions', { textContent: 'Connect the dots following the highlighted pattern' }),
@@ -65,7 +61,6 @@ export const startGame = (onComplete) => {
     previewCanvas: createDomElement('canvas', 'pattern-preview-canvas')
   };
 
-  // Initialize game state
   const gameState = {
     dots: [],
     pattern: PATTERNS[Math.floor(Math.random() * PATTERNS.length)],
@@ -74,10 +69,10 @@ export const startGame = (onComplete) => {
     startTime: null,
     endTime: null,
     completed: false,
-    rect: null // Cache for getBoundingClientRect
+    rect: null 
   };
 
-  // Setup canvases
+
   const setupCanvas = (canvas, size) => {
     Object.assign(canvas.style, {
       position: 'absolute',
@@ -93,7 +88,7 @@ export const startGame = (onComplete) => {
   const ctx = setupCanvas(gameElements.canvas, GAME_AREA_SIZE);
   const previewCtx = setupCanvas(gameElements.previewCanvas, PREVIEW_SIZE);
 
-  // Optimized dot creation with DocumentFragment
+
   const createDots = (container, dotScale = 1, isPreview = false) => {
     const fragment = document.createDocumentFragment();
     const dots = [];
@@ -124,11 +119,11 @@ export const startGame = (onComplete) => {
     return dots;
   };
 
-  // Create game and preview dots
+
   gameState.dots = createDots(gameElements.gameArea);
   const previewDots = createDots(gameElements.patternPreview, 0.4, true);
 
-  // Optimized preview pattern drawing
+
   const drawPreviewPattern = () => {
     const fragment = document.createDocumentFragment();
     previewCtx.strokeStyle = '#4CAF50';
@@ -159,7 +154,7 @@ export const startGame = (onComplete) => {
     gameElements.patternPreview.appendChild(fragment);
   };
 
-  // Optimized line drawing with requestAnimationFrame
+
   const drawLine = (() => {
     let rafId = null;
     
@@ -181,7 +176,6 @@ export const startGame = (onComplete) => {
     ctx.clearRect(0, 0, GAME_AREA_SIZE, GAME_AREA_SIZE);
   };
 
-  // Throttled mouse event handlers
   const throttle = (fn, delay) => {
     let lastCall = 0;
     return (...args) => {
@@ -221,18 +215,17 @@ export const startGame = (onComplete) => {
 
     clearCanvas();
     
-    // Draw connected lines
+
     for (let i = 1; i < gameState.currentPath.length; i++) {
       const prevDot = gameState.dots[gameState.currentPath[i-1]];
       const currentDot = gameState.dots[gameState.currentPath[i]];
       drawLine(prevDot.x, prevDot.y, currentDot.x, currentDot.y);
     }
 
-    // Draw line to cursor
+
     const lastDot = gameState.dots[gameState.currentPath[gameState.currentPath.length - 1]];
     drawLine(lastDot.x, lastDot.y, x, y);
 
-    // Check next dot
     const nextPatternIndex = gameState.currentPath.length;
     if (nextPatternIndex < gameState.pattern.length) {
       const nextDot = gameState.dots[gameState.pattern[nextPatternIndex]];
@@ -254,7 +247,7 @@ export const startGame = (onComplete) => {
         }
       }
     }
-  }, 16); // ~60fps
+  }, 16); 
 
   const handleMouseUp = () => {
     if (!gameState.isDrawing) return;
@@ -271,13 +264,13 @@ export const startGame = (onComplete) => {
     }
   };
 
-  // Event listeners
+
   gameElements.gameArea.addEventListener('mousedown', handleMouseDown);
   gameElements.gameArea.addEventListener('mousemove', handleMouseMove);
   gameElements.gameArea.addEventListener('mouseup', handleMouseUp);
   gameElements.gameArea.addEventListener('mouseleave', handleMouseUp);
 
-  // Add elements to DOM
+
   gameElements.patternPreview.appendChild(gameElements.previewCanvas);
   gameElements.gameArea.appendChild(gameElements.canvas);
   
@@ -288,6 +281,5 @@ export const startGame = (onComplete) => {
   fragment.appendChild(gameElements.gameArea);
   gameContainer.appendChild(fragment);
 
-  // Draw preview pattern
   drawPreviewPattern();
 }; 
