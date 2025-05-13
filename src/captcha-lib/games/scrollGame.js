@@ -1,4 +1,3 @@
-
 /**
  * Scroll-based verification game
  * Player must scroll to the bottom and back to top to complete
@@ -81,10 +80,19 @@ export const startGame = (onComplete) => {
   scrollArea.addEventListener('scroll', () => {
     const scrollPosition = scrollArea.scrollTop;
     const maxScroll = contentElement.clientHeight - scrollArea.clientHeight;
-    const scrollPercentage = Math.round((scrollPosition / maxScroll) * 100);
+    let progressPercentage = 0;
+
+    // Calculate progress percentage based on game state
+    if (!reachedBottom) {
+      // First phase: scrolling down (0% to 50%)
+      progressPercentage = Math.round((scrollPosition / maxScroll) * 50);
+    } else {
+      // Second phase: scrolling up (50% to 100%)
+      progressPercentage = 50 + Math.round(((maxScroll - scrollPosition) / maxScroll) * 50);
+    }
     
     // Update progress indicator
-    progressIndicator.innerHTML = `<span>${Math.min(scrollPercentage, 100)}%</span>`;
+    progressIndicator.innerHTML = `<span>${Math.min(progressPercentage, 100)}%</span>`;
     
     // Record scroll data for this game
     gameData.scrollPatterns.push({
