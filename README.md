@@ -234,7 +234,8 @@ const games = [
   startMouseGame,
   startTypingGame,
   startScrollGame,
-  startDragDropGame
+  startDragDropGame,
+  startPatternGame
   // Add or remove games as needed
 ];
 ```
